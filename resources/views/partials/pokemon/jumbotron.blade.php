@@ -3,7 +3,9 @@
         <div class="col-6">
             <h1 class="display-4">{{$show->name}}</h1>
             <p class="lead">Level : {{$show->lvl}}</p>
-            <p class="lead">Type : {{$show->types}}</p>
+            <p class="lead">Type : @foreach ($types->where('pokemon_id', '=', $show->id) as $item)
+                <span>{{$item->type}} </span>
+            @endforeach</p>
             <hr class="my-4">
             <div class="row">
                 <form class="mx-3" action="/pokemons/{{$show->id}}/edit" method="POST">

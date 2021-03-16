@@ -68,7 +68,8 @@ class PokemonController extends Controller
     public function show(Pokemon $pokemon)
     {
         $show = $pokemon;
-        return view('pages.pokemon.show', compact('show'));
+        $types = Type::all();
+        return view('pages.pokemon.show', compact('show', 'types'));
     }
 
     /**
