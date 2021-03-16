@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pokemon;
+use App\Models\Type;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PokemonController extends Controller
 {
@@ -14,7 +16,9 @@ class PokemonController extends Controller
      */
     public function index()
     {
-        //
+        $pokemons = Pokemon::all();
+        $types = Type::all();
+        return view('pages.pokemon.pokemon', compact('pokemons', 'types'));
     }
 
     /**
@@ -24,7 +28,9 @@ class PokemonController extends Controller
      */
     public function create()
     {
-        //
+        $pokemons = Pokemon::all();
+        $types = Type::all();
+        return view('pages.pokemon.create', compact('pokemons', 'types'));
     }
 
     /**
@@ -35,7 +41,17 @@ class PokemonController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'name' => 'required',
+            'lvl' => 'required',
+            'src' => 'required',
+        ]);
+        $newEntry = new Pokemon;
+        $newEntry->name = $request->name;
+        $newEntry->lvl = $request->lvl;
+        $request->file('src')->storePublicly('img/', 'public');
+        $newEntry->src = $request->file('src')->hashName();
+
     }
 
     /**
@@ -46,7 +62,8 @@ class PokemonController extends Controller
      */
     public function show(Pokemon $pokemon)
     {
-        //
+        $show = $pokemon;
+        return view('pages.pokemon.show', compact('show'));
     }
 
     /**
@@ -57,7 +74,9 @@ class PokemonController extends Controller
      */
     public function edit(Pokemon $pokemon)
     {
-        //
+        $edit = $pokemon;
+        $types = Type::all();
+        return view('pages.pokemon.edit', compact('edit', 'types'));
     }
 
     /**
@@ -69,7 +88,13 @@ class PokemonController extends Controller
      */
     public function update(Request $request, Pokemon $pokemon)
     {
-        //
+        $pokemon->name = $request->name;
+        $pokemon->lvl = $request->lvl;
+        Storage::disk('public')->delete('img/'.$pokemon->src);
+        $request->file('src')->storePublicly('img/', 'public');
+        $pokemon->src = $request->file('src')->hashName();
+        $pokemon->save();
+        return redirect('pokemons');
     }
 
     /**

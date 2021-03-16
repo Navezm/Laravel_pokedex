@@ -24,7 +24,7 @@ class TypeController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.type.create');
     }
 
     /**
@@ -35,7 +35,10 @@ class TypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newEntry = new Type;
+        $newEntry->type = $request->type;
+        $newEntry->save();
+        return redirect('/pokemons');
     }
 
     /**
