@@ -11,9 +11,9 @@
     </div>
     <div class="form-group">
       <label>Type</label>
-      <select class="form-control" name="" id="">
+      <select class="form-control" name="type" id="">
         @foreach ($types->where('pokemon_id', '=', NULL) as $item)
-            <option value="">{{$item->type}}</option>
+            <option value="{{$item->id}}">{{$item->type}}</option>
         @endforeach
       </select>
     </div>

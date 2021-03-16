@@ -46,12 +46,17 @@ class PokemonController extends Controller
             'lvl' => 'required',
             'src' => 'required',
         ]);
+
         $newEntry = new Pokemon;
         $newEntry->name = $request->name;
         $newEntry->lvl = $request->lvl;
         $request->file('src')->storePublicly('img/', 'public');
         $newEntry->src = $request->file('src')->hashName();
-
+        $newEntry->save();
+        $type = Type::find($request->type);
+        $type->pokemon_id = $newEntry->id;
+        $type->save();
+        return redirect('pokemons');
     }
 
     /**
@@ -88,12 +93,21 @@ class PokemonController extends Controller
      */
     public function update(Request $request, Pokemon $pokemon)
     {
+        $validate = $request->validate([
+            'name' => 'required',
+            'lvl' => 'required',
+            'src' => 'required',
+        ]);
+
         $pokemon->name = $request->name;
         $pokemon->lvl = $request->lvl;
         Storage::disk('public')->delete('img/'.$pokemon->src);
         $request->file('src')->storePublicly('img/', 'public');
         $pokemon->src = $request->file('src')->hashName();
         $pokemon->save();
+        $type = Type::find($request->type);
+        $type->pokemon_id = $pokemon->id;
+        $type->save();
         return redirect('pokemons');
     }
 
@@ -105,6 +119,8 @@ class PokemonController extends Controller
      */
     public function destroy(Pokemon $pokemon)
     {
-        //
+        Storage::disk('public')->delete('img/'.$pokemon->src);
+        $pokemon->delete();
+        return redirect('pokemons');
     }
 }

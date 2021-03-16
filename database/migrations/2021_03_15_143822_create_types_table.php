@@ -17,7 +17,7 @@ class CreateTypesTable extends Migration
             $table->id();
             $table->string('type', 150);
             $table->unsignedBigInteger('pokemon_id')->nullable();
-            $table->foreign('pokemon_id')->references('id')->on('pokemon');
+            $table->foreign('pokemon_id')->references('id')->on('pokemon')->onDelete('set null');
             $table->timestamps();
         });
     }
