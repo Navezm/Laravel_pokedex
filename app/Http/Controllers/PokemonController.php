@@ -97,14 +97,15 @@ class PokemonController extends Controller
         $validate = $request->validate([
             'name' => 'required',
             'lvl' => 'required',
-            'src' => 'required',
         ]);
 
         $pokemon->name = $request->name;
         $pokemon->lvl = $request->lvl;
-        Storage::disk('public')->delete('img/'.$pokemon->src);
-        $request->file('src')->storePublicly('img/', 'public');
-        $pokemon->src = $request->file('src')->hashName();
+        if ($request->src != NULL) {
+            Storage::disk('public')->delete('img/'.$pokemon->src);
+            $request->file('src')->storePublicly('img/', 'public');
+            $pokemon->src = $request->file('src')->hashName();
+        }
         $pokemon->save();
         $type = Type::find($request->type);
         $type->pokemon_id = $pokemon->id;

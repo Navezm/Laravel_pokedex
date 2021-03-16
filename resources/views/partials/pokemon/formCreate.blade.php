@@ -1,4 +1,13 @@
 <h1 class="text-center">Add Pokemon</h1>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <form action="/pokemons" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
